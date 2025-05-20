@@ -1,0 +1,24 @@
+{% extends 'shared/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">📝 Articles</h2>
+
+    {% if articles %}
+        <div class="row">
+            {% for article in articles %}
+                <div class="col-md-6 mb-4">
+                    {% include 'article_module/includes/article.html' %}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        {% if user.student %}
+            <div class="alert alert-info">
+                You have no articles yet.
+            </div>
+            <a href="{% url 'article-create-view' %}" class="btn btn-primary">➕ Create Article</a>
+        {% endif %}
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends 'shared/base.html' %}
+{% load static %}
+{% load thumbnail %}
+
+{% block title %}User Panel{% endblock %}
+
+{% block content %}
+{% if current_user %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-3">
+            {% include 'includes/user_panel_menu_component.html' %}
+        </div>
+        <div class="col-md-9 text-center">
+            {% if current_user.first_name %}
+                <h2 class="mb-4">!Welcome, {{ current_user.first_name }}</h2>
+            {% else %}
+                <h2 class="mb-4">!Welcome, {{ current_user.email }}</h2>
+            {% endif %}
+{% endif %}
+
+            {% if current_user and current_user.avatar %}
+                {% thumbnail current_user.avatar '200x200' crop='center' as im %}
+                    <img src="{{ im.url }}" alt="Avatar" class="rounded-circle img-thumbnail shadow">
+                {% endthumbnail %}
+
+            {% elif second_user and second_user.avatar %}
+                {% thumbnail second_user.avatar '200x200' crop='center' as im %}
+                    <img src="{{ im.url }}" alt="Avatar" class="rounded-circle img-thumbnail shadow">
+                {% endthumbnail %}
+            {% else %}
+                <img src="{% static 'images/default-avatar.png' %}" alt="Avatar" class="rounded-circle img-thumbnail shadow" width="200">
+            {% endif %}
+            {% if second_user %}
+                {% if second_user.first_name or second_user.last_name %}
+                    <h2>{{ second_user.first_name }} {{ second_user.last_name }}</h2>
+                {% else %}
+                    <h2>{{ second_user.email }}</h2>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+
+    {% if second_user %}
+            {% if second_user.student %}
+            <li><strong>Field of Study:</strong><p>{{ second_user.student.field_of_study }}</p></li>
+            <li><strong>Education Level:</strong><p>{{ second_user.student.education_level }}</p></li>
+            {% endif %}
+            {% if second_user.proff %}
+                <li><strong>Field of Study:</strong><p>{{ second_user.proff.field_of_study }}</p></li>
+                <li><strong>Education Level:</strong><p>{{ second_user.proff.education_level }}</p></li>
+            {% endif %}
+    {% endif %}
+    {% if current_user %}
+        {% if current_user.student %}
+            <li><strong>Field of Study:</strong><p>{{ current_user.student.field_of_study }}</p></li>
+            <li><strong>Education Level:</strong><p>{{ current_user.student.education_level }}</p></li>
+            {% endif %}
+            {% if current_user.proff %}
+                <li><strong>Field of Study:</strong><p>{{ current_user.proff.field_of_study }}</p></li>
+                <li><strong>Education Level:</strong><p>{{ current_user.proff.education_level }}</p></li>
+            {% endif %}
+    {% endif %}
+
+    <strong>About User:</strong>
+    {% if current_user.about_user or second_user.about_user %}
+        <p> {{ current_user.about_user }}  {{ second_user.about_user }} </p>
+    {% endif %}
+</div>
+{% endblock %}

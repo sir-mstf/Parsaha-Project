@@ -1,0 +1,29 @@
+{% extends 'shared/base.html' %}
+
+{% block title %}Home Page{% endblock %}
+
+{% block content %}
+<div class="container text-center mt-5">
+    <h1 class="mb-4">Welcome to Parsaha Project</h1>
+
+    {% if current_user.is_authenticated %}
+        <div class="alert alert-success">
+            Welcome  {{ current_user.get_full_name|default:current_user.username }}!
+        </div>
+        <a href="{% url 'user-panel-dashboard' current_user.id %}" class="btn btn-primary">User Dashboard</a>
+        <!-- <a href="{% url 'logout' %}" class="btn btn-outline-danger ms-2">Logout</a> -->
+    {% else %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+        <p class="lead">for using the site,please Login or Register</p>
+        <a href="{% url 'login-page' %}" class="btn btn-success me-2">Login</a>
+        <a href="{% url 'register-page' %}" class="btn btn-outline-primary">Register</a>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,31 @@
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="card-title mb-3">User Menu</h5>
+        <p class="text-muted">{{ current_user.email }}</p>
+
+        {% if current_user.student or current_user.proff %}
+            <ul class="list-group mb-3">
+                <li class="list-group-item">
+                    <a href="{% url 'articles-list-view' %}" class="text-decoration-none">📄 My Articles</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="{% url 'edit-profile-view' current_user.id %}" class="text-decoration-none">✏️ Edit Profile</a>
+                </li>
+            </ul>
+        {% elif not current_user.is_superuser %}
+            <p>!you are still not completed your profile</p>
+            <a href="{% url 'register-complete-page' current_user.id %}" class="btn btn-warning w-100 mb-3">🔒 Complete registration</a>
+        {% else %}
+            <ul class="list-group mb-3">
+            <li class="list-group-item">
+                <a href="/admin">admin panel</a>
+            </li>
+            </ul>
+        {% endif %}
+        <ul class="list-group mb-3">
+            <li class="list-group-item">
+                <a href="{% url 'logout' %}" class="btn btn-outline-danger w-100">🚪 Logout</a>
+            </li>
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,65 @@
+{% extends 'shared/base.html' %}
+{% load static %}
+
+{% block title %}{{ article.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow">
+        <div class="card-body">
+            <h2 class="card-title">{{ article.title }}</h2>
+            <p class="card-text">{{ article.content }}</p>
+            <strong>Author:</strong>
+            <a href="{% url 'user-panel-dashboard' article.author.user.id %}">{{ article.author }}</a>
+
+            {% if article.file %}
+                <a href="{% url 'download-article-file' article.id %}" class="btn btn-outline-primary my-2">Download Article File</a>
+            {% endif %}
+
+            {% if user.role == "student" or article.manager.id == user.proff.id %}
+                {% if articles_score %}
+                    <div class="mt-4">
+                        <h5>Scores</h5>
+                        {% for article_score in articles_score %}
+                            <div class="border rounded p-2 my-2">
+                                <p><strong>Score:</strong> {{ article_score.score }}</p>
+                                <strong>Professor:</strong>
+                                <a href="{% url 'user-panel-dashboard' article_score.professor.user.id %}">{{ article_score.professor }}</a>
+                                <p><strong>Protest:</strong> {{ article_score.student_protest }}</p>
+                                {% if article.manager.id == user.proff.id %}
+                                    <p><strong>Scoring Permitted:</strong> {{ article_score.scoring_permission }}</p>
+                                    <form method="post" action="{% url 'article-score-permission' article_score.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit">{% if article_score.scoring_permission == False %}change to Permitted{% else %}change to Not Permitted{% endif %}</button>
+                                    </form>
+                                {% endif %}
+                                {% if user.role == "student" %}
+                                <a href="{% url 'article-score-protest-view' article_score.id %}" class="btn btn-sm btn-outline-danger">Request Revision</a>
+                                {% comment %}<a href="{% url 'article-update-view' article.id %}" class="btn btn-warning mt-3">Edit Article</a>{% endcomment %}
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    {% if user.role == "student" %}
+                        <a href="{% url 'article-update-view' article.id %}" class="btn btn-warning mt-3">Edit Article</a>
+                    {% endif %}
+                    </div>
+                {% endif %}
+            {% endif %}
+            {% comment %}<p><strong>Edit Permitted:</strong>{{ article.edit_permission }}</p>{% endcomment %}
+            {% if user.role == "proff" %}
+                <div class="mt-4">
+                    <a href="{% url 'article-score-create-view' article_score.id %}" class="btn btn-success">Assign Score</a>
+                    <p class="mt-2"><strong>Score:</strong> {{ article_score.score }}</p>
+                    {% if article.manager.id == user.proff.id %}
+                        <form method="post" action="{% url 'article-permission' article.id %}">
+                        {% csrf_token %}
+                        <button type="submit">{% if article.edit_permission == False %}change to Permitted{% else %}change to not Permitted{% endif %}</button>
+                        </form>
+                    {% endif %}
+                </div>
+            {% endif %}
+            <p><strong>Edit Permitted:</strong>{{ article.edit_permission }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
