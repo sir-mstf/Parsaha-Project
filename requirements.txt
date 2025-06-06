@@ -1,4 +1,4 @@
-this project includes almost of following libraries but not restrict of them:
+this project includes most of the following libraries, but is not limited to them.
 Django==3.2.13
 django-allauth==0.45.0
 django-cors-headers==3.11.0
